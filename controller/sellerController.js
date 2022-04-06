@@ -8,8 +8,14 @@ require('dotenv').config({ path: 'variable.env'} );
 const createToken = (seller, key, expiresIn) => {
     // console.log(seller);
     const { id, firstName, lastName, email } = seller;
+    const payload = {
+        id, 
+        firstName, 
+        lastName, 
+        email
+    };
     // Firmar el token
-    return jwt.sign( { id, firstName, lastName, email }, key, { expiresIn });
+    return jwt.sign(payload, key, { expiresIn });
 };
 
 // QUERY
@@ -51,12 +57,12 @@ const authSeller = async input => {
 
     // 1. Verificar que el vendedor exista
     const existSeller = await Seller.findOne({ email });
-    if (!existSeller) throw new Error('El vendedor no existe.');
+    if (!existSeller) throw new Error('El vendedor o contraseña es incorrecta o no existe.'); // El vendedor no existe.
 
     // 2. Verificar si el password es correcto
-    const passwordOK = await bcryptjs.compare(password, existSeller.password);
-    if (!passwordOK) throw new Error('La contraseña es incorrecta.');
-
+    const passwordSuccess = await bcryptjs.compare(password, existSeller.password);
+    if (!passwordSuccess) throw new Error('El vendedor o contraseña es incorrecta o no existe.'); // La contraseña es incorrecta.
+    
     // 3. Crear el token
     return {
         token: createToken(existSeller, process.env.AUTH_KEY, '24h')
