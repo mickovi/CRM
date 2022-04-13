@@ -5,6 +5,8 @@ const jwt = require('jsonwebtoken');
 const { verify } = require('jsonwebtoken');
 require('dotenv').config({ path: 'variable.env'} );
 
+// Helpers
+
 const createToken = (seller, key, expiresIn) => {
     // console.log(seller);
     const { id, firstName, lastName, email } = seller;
@@ -26,7 +28,6 @@ const getSeller = async token => {
     return sellerID;
 };
 
-
 // MUTATION
 
 const newSeller = async input => {
@@ -42,7 +43,7 @@ const newSeller = async input => {
     const salt = await bcryptjs.genSalt(10); // genSalt vs genSaltSync?
     input.password = await bcryptjs.hash(password, salt);
 
-    // 3. Guardarlo en la base de datos.
+    // 3. Guardar el registro del vendedor en la base de datos.
     try {
         const seller = new Seller(input);
         seller.save();
