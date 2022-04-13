@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
 
-const SellerSchema = Schema({
+// 1. Definir el Schema
+const SellerSchema = mongoose.Schema({
     firstName: {
         type: String,
         require: true,
@@ -29,4 +29,5 @@ const SellerSchema = Schema({
     }
 });
 
+// 2. Definir el modelo
 module.exports = mongoose.model('Seller', SellerSchema);
