@@ -1,6 +1,6 @@
-const { ApolloServer } = require('apollo-server')
-const typeDefs = require('./db/schema')
-const resolvers = require('./db/resolvers')
+const { ApolloServer } = require('apollo-server');
+const typeDefs = require('./gql/schema');
+const resolvers = require('./gql/resolvers');
 const connectDB = require('./config/db');
 
 // Conectar a la base de datos
@@ -10,9 +10,9 @@ connectDB();
 const server = new ApolloServer({
     typeDefs,
     resolvers
-})
+});
 
 // Arrancar el servidor
 server.listen().then(({url}) => {
-    console.log(`🚀 Servidor ${url} listo!`)
-})
+    console.log(`🚀 Servidor ${url} listo!`);
+});
