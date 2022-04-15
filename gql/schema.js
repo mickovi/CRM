@@ -31,6 +31,21 @@ typeDefs = gql`
         seller: ID
     }
 
+    type Order {
+        id: ID
+        order: [InfoOrder]
+        total: Float
+        client: ID
+        seller: ID
+        date: String
+        state: OrderState
+    }
+
+    type InfoOrder {
+        id: ID
+        quantity: Int
+    }
+
     input SellerInput {
         firstName: String!
         lastName: String!
@@ -71,37 +86,68 @@ typeDefs = gql`
         enterprise: String
     }
 
+    # OBS: El vendedor (seller) se asigna por medio de la autenticación
+
+    input OrderProductInput {
+        id: ID
+        quantity: Int
+    }
+
+    input OrderInput {
+        order: [OrderProductInput]
+        total: Float!
+        client: ID!
+        state: OrderState 
+    }
+
+    enum OrderState {
+        PENDING
+        COMPLETED
+        CANCELED
+    }
+
     type Query {
 
-        # Sellers
+        # Seller
         getSeller(token: String!): Seller
 
-        # Products
+        # Product
         getProducts: [Product]
         getProduct(id: ID!): Product
 
-        # Clients
+        # Client
         getClients: [Client]
         getSellersClient: [Client]
         getClient(id: ID!): Client
+
+        # Order
+        getOrders: [Order]
+        getOrdersSeller: [Order]
+        getOrder(id: ID!): Order    
+        getOrderByState(state: String!): [Order]
     }
 
     type Mutation {
 
-        # Sellers
+        # Seller
         newSeller(input: SellerInput): Seller
         authSeller(input: AuthInput): Token
 
-        # Products
+        # Product
         newProduct(input: ProductInput): Product
         updateProduct(id: ID!, input: ProductUpdateInput): Product
         deleteProduct(id: ID!): String
         # TODO: disabledProduct
 
-        # Clients
+        # Client
         newClient(input: ClientInput): Client
         updateClient(id: ID!, input: ClientUpdateInput): Client
         deleteClient(id: ID!): String
+
+        # Order
+        newOrder(input: OrderInput): Order
+        updateOrder(id: ID!, input: OrderInput): Order
+        deleteOrder(id: ID!): String
     }
 `;
 
