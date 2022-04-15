@@ -28,7 +28,7 @@ const ClientSchema = mongoose.Schema({
     },
     createdAt: {
         type: Date,
-        default: Date.now()
+        default: Date.now() /* TODO: Mejorar la forma de mostras la fecha, fecha: null? */
     },
     seller: {
         type: mongoose.Schema.Types.ObjectId,
