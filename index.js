@@ -1,18 +1,48 @@
 const { ApolloServer } = require('apollo-server');
-const typeDefs = require('./gql/schema');
-const resolvers = require('./gql/resolvers');
 const connectDB = require('./config/db');
+
 // Para autenticar el cliente de un vendedor:
 const jwt = require('jsonwebtoken');
 require('dotenv').config({ path: 'variable.env'} );
+
+// Modularizar los schemas y resolvers
+const _ = require("lodash");
+
+const {
+    baseTypeDef,
+    clientTypeDef,
+    sellerTypeDef,
+    productTypeDef,
+    orderTypeDef
+} = require('./gql/schemas');
+
+const {
+    clientResolver,
+    sellerResolver,
+    productResolver,
+    orderResolver
+} = require('./gql/resolvers');
+
 
 // Conectar a la base de datos
 connectDB();
 
 // Crear una instancia de ApolloServer
 const server = new ApolloServer({
-    typeDefs,
-    resolvers,
+    typeDefs: [
+        baseTypeDef,
+        clientTypeDef,
+        sellerTypeDef,
+        productTypeDef,
+        orderTypeDef
+    ],
+    resolvers: _.merge(
+        {},
+        clientResolver,
+        sellerResolver,
+        productResolver,
+        orderResolver
+    ),
     context: ({ req }) => {
         // console.log(req.headers['authorization']);
         const token = req.headers['authorization'] || '';
