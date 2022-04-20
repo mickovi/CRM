@@ -5,6 +5,7 @@ typeDef = gql`
         getClients: [Client]
         getSellersClient: [Client]
         getClient(id: ID!): Client
+        getTopClients: [TopClient]
     }
 
     extend type Mutation {
@@ -21,6 +22,11 @@ typeDef = gql`
         phone: String
         enterprise: String
         seller: ID
+    }
+
+    type TopClient {
+        total: Float
+        client: [Client]
     }
 
     input ClientInput {

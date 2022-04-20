@@ -21,6 +21,20 @@ const getProducts = async () => {
     };
 };
 
+const searchProduct = async (text) => {
+    const products = await Product.find(
+        {
+            $text: {
+                $search: text
+            }
+        }
+    ).limit(10);
+
+    if (products.length === 0) throw new Error('No hay coincidencias.');
+    
+    return products;
+};
+
 // MUTATION
 
 const newProduct = async input => {
@@ -62,6 +76,7 @@ const deleteProduct = async id => {
 module.exports = {
     getProduct,
     getProducts,
+    searchProduct,
     newProduct,
     updateProduct,
     deleteProduct,

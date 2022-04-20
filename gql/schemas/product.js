@@ -4,6 +4,7 @@ typeDef = gql`
     extend type Query {
         getProducts: [Product]
         getProduct(id: ID!): Product
+        searchProduct(text: String!): [Product]
     }
 
     extend type Mutation {

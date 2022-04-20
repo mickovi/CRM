@@ -3,6 +3,7 @@ const { gql } = require('apollo-server');
 typeDef = gql`
     extend type Query {
         getSeller(token: String!): Seller
+        getTopSeller: [TopSeller]
     }
 
     extend type Mutation {
@@ -20,6 +21,11 @@ typeDef = gql`
 
     type Token {
         token: String
+    }
+
+    type TopSeller {
+        total: Float
+        seller: [Seller]
     }
 
     input SellerInput {

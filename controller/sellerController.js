@@ -1,5 +1,6 @@
 // Seller tiene todos los métodos de mongoose para insertar los registro a la BD.
 const Seller = require('../models/Seller');
+const Order = require('../models/Order');
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { verify } = require('jsonwebtoken');
@@ -26,6 +27,41 @@ const getSeller = async token => {
     // Verificar el token
     const sellerID = await verify(token, process.env.AUTH_KEY);
     return sellerID;
+};
+
+const getTopSeller = async () => {
+    const sellers = await Order.aggregate([
+        {
+            $match: {
+                state: 'COMPLETED'
+            }
+        },
+        {
+            $group: {
+                _id: '$seller',
+                total: {
+                    $sum: '$total'
+                }
+            }
+        },
+        {
+            $lookup: {
+                from: 'sellers',
+                localField: '_id',
+                foreignField: '_id',
+                as: 'seller'
+            }
+        },
+        {
+            $limit: 5
+        },
+        {
+            $sort: {
+                total: -1
+            }
+        }
+    ]);
+    return sellers;
 };
 
 // MUTATION
@@ -72,6 +108,7 @@ const authSeller = async input => {
 
 module.exports = {
     getSeller,
+    getTopSeller,
     newSeller,
     authSeller,
 }

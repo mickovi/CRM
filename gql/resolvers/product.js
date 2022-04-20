@@ -3,7 +3,8 @@ const productsController = require('../../controller/productsController');
 const resolvers = {
     Query: {
         getProducts: () => productsController.getProducts(),
-        getProduct: (_, { id }) => productsController.getProduct(id)
+        getProduct: (_, { id }) => productsController.getProduct(id),
+        searchProduct: (_, { text }) => productsController.searchProduct(text)
     },
     Mutation: {
         newProduct: (_, { input } ) => productsController.newProduct(input),

@@ -4,7 +4,8 @@ const resolvers = {
     Query: {
         getClients: () => clientController.getClients(),
         getSellersClient: (_, {}, ctx) => clientController.getSellersClient(ctx),
-        getClient: (_, { id }, ctx) => clientController.getClient(id, ctx)
+        getClient: (_, { id }, ctx) => clientController.getClient(id, ctx),
+        getTopClients: () => clientController.getTopClients()
     },
     Mutation: {
         newClient: (_, { input }, ctx ) => clientController.newClient(input, ctx),

@@ -40,7 +40,7 @@ const getOrderByState = async (state, ctx) => {
 
     // 1. Verificar si el pedido existe
     if (orders.length == 0) throw new Error('No hay resultados');
-    console.log(orders, orders.seller)
+    // console.log(orders, orders.seller)
     
     // 2. Retornar los pedidos
     return orders;

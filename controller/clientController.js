@@ -1,4 +1,6 @@
+const { orderBy } = require('lodash');
 const Client = require('../models/Client');
+const Order = require('../models/Order');
 
 // QUERY
 
@@ -28,6 +30,36 @@ const getClient = async (id, ctx) => {
     // 2. El vendedor puede acceder a sus clientes
     if (client.seller.toString() !== ctx.seller.id) throw new Error('No tienes las credenciales para acceder a este cliente.');
     return client;
+};
+
+const getTopClients = async () => {
+    const clients = await Order.aggregate([
+        {
+            $match: {
+                state: 'COMPLETED'
+            }
+        },
+        {
+            $group: {
+                _id: '$client',
+                total: { $sum: '$total' }
+            } 
+        },
+        {
+            $lookup: {
+                from: 'clients',
+                localField: '_id',
+                foreignField: '_id',
+                as: 'client'
+            }
+        },
+        {
+            $sort: {
+                total: -1
+            }
+        }
+    ]);
+    return clients;
 };
 
 // MUTATION
@@ -86,12 +118,14 @@ const deleteClient = async (id, ctx) => {
     } catch (error) {
         console.log(error);
     }
-}
+};
+
 // TODO: Refactorizar, hay mucha repeticion
 module.exports = {
     getClients,
     getSellersClient,
     getClient,
+    getTopClients,
     newClient,
     updateClient,
     deleteClient
